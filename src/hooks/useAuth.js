@@ -48,3 +48,7 @@ export function useAuth() {
 
   return { user, profile, loading, signUp, signIn, signOut }
 }
+
+
+
+

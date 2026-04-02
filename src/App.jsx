@@ -7,6 +7,7 @@ import Exercices from './pages/Exercices'
 import Classement from './pages/Classement'
 import Amis from './pages/Amis'
 import Historique from './pages/Historique'
+import NouvelleSeance from './pages/NouvelleSeance'
 
 export default function App() {
   const { user, profile, loading, signIn, signUp } = useAuth()
@@ -28,11 +29,12 @@ export default function App() {
   }
 
   const pages = {
-    accueil: <Accueil profile={profile} onNavigate={setPage} />,
-    exercices: <Exercices profile={profile} />,
-    classement: <Classement profile={profile} />,
-    amis: <Amis profile={profile} />,
-    historique: <Historique profile={profile} />,
+    accueil: <Accueil profile={profile} onNavigate={setPage} />, 
+    exercices: <Exercices profile={profile} />, 
+    classement: <Classement profile={profile} />, 
+    amis: <Amis profile={profile} />, 
+    historique: <Historique profile={profile} />, 
+    'nouvelle-seance': <NouvelleSeance profile={profile} onNavigate={setPage} />,
   }
 
   return (
