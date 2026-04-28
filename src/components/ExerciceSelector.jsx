@@ -73,6 +73,28 @@ const ExerciceSelector = ({ selectedExercises, setSelectedExercises, onNext }) =
             }}>{m}</button>
           ))}
         </div>
+
+        {/* ✅ BOUTON ICI EN HAUT */}
+        <div style={{ paddingBottom: 12, borderBottom: '1px solid #1a2a45', marginBottom: 8 }}>
+          {selectedExercises.length > 0 && (
+            <p style={{ color: '#00e5ff', fontSize: 13, fontWeight: 600, marginBottom: 8, textAlign: 'center' }}>
+              {selectedExercises.length} exercice{selectedExercises.length > 1 ? 's' : ''} sélectionné{selectedExercises.length > 1 ? 's' : ''}
+            </p>
+          )}
+          <button
+            onClick={onNext}
+            disabled={selectedExercises.length === 0}
+            style={{
+              width: '100%', padding: '14px 0', borderRadius: 16,
+              background: selectedExercises.length ? 'linear-gradient(135deg, #006064, #00acc1)' : '#1a2a45',
+              color: '#fff', fontSize: 16, fontWeight: 700, border: 'none',
+              cursor: selectedExercises.length ? 'pointer' : 'not-allowed',
+              opacity: selectedExercises.length ? 1 : 0.5,
+            }}
+          >
+            Valider ({selectedExercises.length})
+          </button>
+        </div>
       </div>
 
       {/* Liste scrollable */}
@@ -126,7 +148,8 @@ const ExerciceSelector = ({ selectedExercises, setSelectedExercises, onNext }) =
         })}
         <div style={{ height: 16 }} />
       </div>
-
+    </div>
+  );
       {/* Bouton fixe en bas */}
       <div style={{
         padding: '12px 20px 20px',
