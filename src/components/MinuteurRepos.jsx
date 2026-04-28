@@ -62,38 +62,43 @@ const MinuteurRepos = ({ setsData, restConfig, setRestConfig, onFinish, onPrev }
   }
 
   return (
-    <div className="minuteur-repos" style={{ padding: 20 }}>
-      <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 18 }}>Séance en cours</h2>
-      <div style={{ background: '#131e35', borderRadius: 16, padding: 16, marginBottom: 18 }}>
-        <p style={{ fontWeight: 600, fontSize: 16, color: '#00e5ff', marginBottom: 8 }}>{currentEx.name}</p>
-        <p style={{ color: '#f0f4ff', fontSize: 15, marginBottom: 8 }}>Série {serieIdx + 1} / {totalSeries}</p>
-        <div style={{ display: 'flex', gap: 12, marginBottom: 10 }}>
-          <span style={{ background: '#192038', borderRadius: 8, padding: '6px 14px', color: '#fff', fontWeight: 600, fontSize: 15 }}>Répétitions : {currentEx.series[serieIdx].reps}</span>
-          <span style={{ background: '#192038', borderRadius: 8, padding: '6px 14px', color: '#fff', fontWeight: 600, fontSize: 15 }}>Poids : {currentEx.series[serieIdx].weight} kg</span>
+    <main className="minuteur-dashboard">
+      <h2 className="minuteur-title">Séance en cours</h2>
+      <section className="minuteur-exo-card">
+        <p className="minuteur-exo-name">{currentEx.name}</p>
+        <p className="minuteur-exo-serie">Série {serieIdx + 1} / {totalSeries}</p>
+        <div className="minuteur-exo-infos">
+          <span className="minuteur-exo-info">Répétitions : {currentEx.series[serieIdx].reps}</span>
+          <span className="minuteur-exo-info">Poids : {currentEx.series[serieIdx].weight} kg</span>
         </div>
-      </div>
-      <div style={{ marginBottom: 18 }}>
-        <label style={{ color: '#6b7fa3', fontSize: 14, marginRight: 10 }}>Repos entre séries :</label>
-        <select
+      </section>
+      <div className="minuteur-rest-config">
+        <label htmlFor="rest-input" className="minuteur-rest-label">Repos entre séries :</label>
+        <input
+          id="rest-input"
+          type="number"
+          min={1}
           value={restConfig}
-          onChange={e => setRestConfig(Number(e.target.value))}
-          style={{ padding: '8px 14px', borderRadius: 10, background: '#192038', color: '#fff', border: '1px solid #1a2a45', fontSize: 15 }}
-        >
-          {REST_OPTIONS.map(opt => <option key={opt} value={opt}>{opt} sec</option>)}
-        </select>
+          onChange={e => {
+            const val = Math.max(1, Number(e.target.value));
+            setRestConfig(val);
+          }}
+          className="minuteur-rest-input"
+        />
+        <span className="minuteur-rest-unit">secondes</span>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 18 }}>
-        <span style={{ fontSize: 48, fontWeight: 800, color: timer === 0 ? '#00e5ff' : '#fff', letterSpacing: 2 }}>{timer}s</span>
+      <div className="minuteur-timer-block">
+        <span className={`minuteur-timer${timer === 0 ? ' finished' : ''}`}>{timer}s</span>
         <button
           onClick={() => setRunning(r => !r)}
-          style={{ marginTop: 10, padding: '10px 28px', borderRadius: 14, background: running ? '#ff3d9a' : 'linear-gradient(135deg, #006064, #00acc1)', color: '#fff', fontWeight: 700, fontSize: 16, border: 'none' }}
+          className={`minuteur-timer-btn${running ? ' pause' : ''}`}
         >{running ? 'Pause' : 'Démarrer'}</button>
       </div>
-      <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
-        <button onClick={prevSerie} className="btn-secondary" style={{ flex: 1, padding: '14px 0', borderRadius: 14, background: '#1a2a45', color: '#fff', fontWeight: 700, fontSize: 15 }}>Précédent</button>
-        <button onClick={nextSerie} className="btn-primary" style={{ flex: 2, padding: '14px 0', borderRadius: 14, background: 'linear-gradient(135deg, #006064, #00acc1)', color: '#fff', fontWeight: 700, fontSize: 15 }}>Série suivante</button>
+      <div className="minuteur-actions">
+        <button onClick={prevSerie} className="btn-secondary minuteur-action-btn">Précédent</button>
+        <button onClick={nextSerie} className="btn-primary minuteur-action-btn next">Série suivante</button>
       </div>
-    </div>
+    </main>
   );
 };
 

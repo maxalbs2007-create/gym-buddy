@@ -1,12 +1,14 @@
-import { Home, Dumbbell, Trophy, Users, History } from 'lucide-react'
+
+import { Home, Dumbbell, Trophy, Users, History, Camera } from 'lucide-react';
 
 const tabs = [
   { id: 'accueil', label: 'Accueil', icon: Home },
   { id: 'exercices', label: 'Exercices', icon: Dumbbell },
   { id: 'classement', label: 'Classement', icon: Trophy },
+  { id: 'progression', label: 'Progression', icon: Camera },
   { id: 'amis', label: 'Amis', icon: Users },
   { id: 'historique', label: 'Historique', icon: History },
-]
+];
 
 export default function BottomNav({ active, onChange }) {
   return (

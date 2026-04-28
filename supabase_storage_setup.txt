@@ -1,0 +1,8 @@
+Créer un bucket public nommé progress-photos dans Supabase Storage.
+Autoriser l'upload et la lecture pour l'utilisateur connecté (policy RLS sur user_id).
+Exemple de policy :
+
+-- Allow upload/read if user matches
+CREATE POLICY "Users can manage their own photos" ON storage.objects
+  FOR ALL
+  USING (auth.uid()::uuid = split_part(name, '/', 1)::uuid);

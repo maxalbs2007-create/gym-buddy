@@ -6,6 +6,7 @@ import SeanceSummary from '../components/SeanceSummary';
 
 const NouvelleSeance = ({ profile, onNavigate }) => {
   const [step, setStep] = useState(1);
+  const [showSelector, setShowSelector] = useState(false);
   const [selectedExercises, setSelectedExercises] = useState([]);
   const [setsData, setSetsData] = useState([]);
   const [restConfig, setRestConfig] = useState(60);
@@ -17,7 +18,18 @@ const NouvelleSeance = ({ profile, onNavigate }) => {
 
   return (
     <div className="nouvelle-seance-container">
-      {step === 1 && (
+      {step === 1 && !showSelector && (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 40 }}>
+          <button
+            className="btn-primary"
+            style={{ padding: '18px 32px', fontSize: 18, borderRadius: 18, fontWeight: 700 }}
+            onClick={() => setShowSelector(true)}
+          >
+            Ajouter un exercice
+          </button>
+        </div>
+      )}
+      {step === 1 && showSelector && (
         <ExerciceSelector
           selectedExercises={selectedExercises}
           setSelectedExercises={setSelectedExercises}

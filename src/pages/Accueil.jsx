@@ -48,108 +48,52 @@ export default function Accueil({ profile, onNavigate }) {
   const initial = profile?.username?.charAt(0).toUpperCase() || 'U'
 
   return (
-    <div style={{
-      minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start',
-      padding: '38px 0 100px',
-      background: 'none',
-    }}>
-      <div style={{
-        width: '100%', maxWidth: 420, margin: '0 auto 38px',
-        display: 'flex', alignItems: 'center', gap: 18,
-      }}>
-        <div style={{
-          width: 54, height: 54, borderRadius: '50%',
-          background: 'linear-gradient(135deg, #006064, #00acc1)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 24, fontWeight: 900, color: '#fff',
-          boxShadow: '0 2px 8px 0 rgba(0,229,255,0.10)',
-          border: '2.5px solid #0a192f',
-        }}>{initial}</div>
+    <main className="home-dashboard">
+      <header className="home-header">
+        <div className="avatar-gradient">{initial}</div>
         <div>
-          <p style={{ color: '#6b7fa3', fontSize: 14, fontWeight: 600, marginBottom: 2 }}>Bienvenue</p>
-          <p style={{ fontSize: 22, fontWeight: 900, color: '#f0f4ff', letterSpacing: 0.2, lineHeight: 1 }}>{profile?.username || '…'}</p>
+          <p className="welcome">Bienvenue</p>
+          <h1 className="username">{profile?.username || '…'}</h1>
         </div>
-      </div>
-
-      <div style={{
-        width: '100%', maxWidth: 420, margin: '0 auto 38px',
-        display: 'flex', flexDirection: 'column', gap: 22,
-      }}>
-        <div style={{
-          background: 'rgba(19,30,53,0.92)',
-          borderRadius: 18,
-          boxShadow: '0 4px 18px 0 rgba(0,229,255,0.06)',
-          border: '1.5px solid #1a2a45',
-          padding: '22px 26px',
-          display: 'flex', alignItems: 'center', gap: 18,
-        }}>
-          <Dumbbell size={28} color="#00e5ff" style={{ flexShrink: 0 }} />
+      </header>
+      <section className="stats-grid">
+        <div className="stat-card">
+          <Dumbbell size={28} color="#00e5ff" />
           <div>
-            <div style={{ color: '#6b7fa3', fontSize: 13, fontWeight: 600, marginBottom: 2 }}>Séances</div>
-            <div style={{ fontSize: 28, fontWeight: 900, color: '#fff', letterSpacing: 0.2 }}>{stats.sessions}</div>
+            <div className="stat-label">Séances</div>
+            <div className="stat-value">{stats.sessions}</div>
           </div>
         </div>
-        <div style={{
-          background: 'rgba(19,30,53,0.92)',
-          borderRadius: 18,
-          boxShadow: '0 4px 18px 0 rgba(0,229,255,0.06)',
-          border: '1.5px solid #1a2a45',
-          padding: '22px 26px',
-          display: 'flex', alignItems: 'center', gap: 18,
-        }}>
-          <Activity size={28} color="#00e5ff" style={{ flexShrink: 0 }} />
+        <div className="stat-card">
+          <Activity size={28} color="#00e5ff" />
           <div>
-            <div style={{ color: '#6b7fa3', fontSize: 13, fontWeight: 600, marginBottom: 2 }}>Volume total</div>
-            <div style={{ fontSize: 28, fontWeight: 900, color: '#fff', letterSpacing: 0.2 }}>{stats.volume} <span style={{ fontSize: 15, fontWeight: 400, opacity: 0.7 }}>tonnes</span></div>
+            <div className="stat-label">Volume total</div>
+            <div className="stat-value">{stats.volume} <span className="stat-unit">tonnes</span></div>
           </div>
         </div>
-        <div style={{
-          background: 'rgba(19,30,53,0.92)',
-          borderRadius: 18,
-          boxShadow: '0 4px 18px 0 rgba(255,61,154,0.06)',
-          border: '1.5px solid #1a2a45',
-          padding: '22px 26px',
-          display: 'flex', alignItems: 'center', gap: 18,
-        }}>
-          <Flame size={28} color="#ff3d9a" style={{ flexShrink: 0 }} />
+        <div className="stat-card">
+          <Flame size={28} color="#ff3d9a" />
           <div>
-            <div style={{ color: '#6b7fa3', fontSize: 13, fontWeight: 600, marginBottom: 2 }}>Série</div>
-            <div style={{ fontSize: 28, fontWeight: 900, color: '#fff', letterSpacing: 0.2 }}>{stats.streak} <span style={{ fontSize: 15, fontWeight: 400, opacity: 0.7 }}>jours</span></div>
+            <div className="stat-label">Série</div>
+            <div className="stat-value">{stats.streak} <span className="stat-unit">jours</span></div>
           </div>
         </div>
-        <div style={{
-          background: 'rgba(19,30,53,0.92)',
-          borderRadius: 18,
-          boxShadow: '0 4px 18px 0 rgba(255,140,0,0.06)',
-          border: '1.5px solid #1a2a45',
-          padding: '22px 26px',
-          display: 'flex', alignItems: 'center', gap: 18,
-        }}>
-          <Trophy size={28} color="#ffb800" style={{ flexShrink: 0 }} />
+        <div className="stat-card">
+          <Trophy size={28} color="#ffb800" />
           <div>
-            <div style={{ color: '#6b7fa3', fontSize: 13, fontWeight: 600, marginBottom: 2 }}>Classement</div>
-            <div style={{ fontSize: 28, fontWeight: 900, color: '#fff', letterSpacing: 0.2 }}>#{stats.rank}</div>
+            <div className="stat-label">Classement</div>
+            <div className="stat-value">#{stats.rank}</div>
           </div>
         </div>
-      </div>
-
+      </section>
       <button
         onClick={startNewSession}
-        className="btn-primary"
-        style={{
-          width: '100%', maxWidth: 420, padding: '20px 0', borderRadius: 22,
-          fontSize: 18, fontWeight: 800, marginTop: 10,
-          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14,
-          boxShadow: '0 4px 18px 0 rgba(0,229,255,0.10)',
-          letterSpacing: 0.2,
-        }}
-        onMouseOver={e => e.currentTarget.style.transform = 'scale(1.03)'}
-        onMouseOut={e => e.currentTarget.style.transform = 'none'}
+        className="btn-primary home-btn"
       >
         <Plus size={24} strokeWidth={2.5} />
         Nouvelle séance
       </button>
-    </div>
+    </main>
   )
 }
 

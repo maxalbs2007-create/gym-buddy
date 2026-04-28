@@ -7,6 +7,9 @@ import Exercices from './pages/Exercices'
 import Classement from './pages/Classement'
 import Amis from './pages/Amis'
 import Historique from './pages/Historique'
+
+
+import Progression from './pages/Progression'
 import NouvelleSeance from './pages/NouvelleSeance'
 
 export default function App() {
@@ -32,9 +35,10 @@ export default function App() {
     accueil: <Accueil profile={profile} onNavigate={setPage} />, 
     exercices: <Exercices profile={profile} />, 
     classement: <Classement profile={profile} />, 
+    progression: <Progression profile={profile} />, 
     amis: <Amis profile={profile} />, 
     historique: <Historique profile={profile} />, 
-    'nouvelle-seance': <NouvelleSeance profile={profile} onNavigate={setPage} />,
+    'nouvelle-seance': <NouvelleSeance profile={profile} onNavigate={setPage} />, 
   }
 
   return (

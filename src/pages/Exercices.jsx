@@ -16,6 +16,7 @@ export default function Exercices({ profile }) {
   const [filter, setFilter] = useState('Tous')
   const [showAdd, setShowAdd] = useState(false)
   const [newEx, setNewEx] = useState({ name: '', muscle_group: 'Pectoraux', equipment: '' })
+  const [selectedEx, setSelectedEx] = useState(null)
 
   useEffect(() => { fetchExercises() }, [])
 
@@ -104,29 +105,59 @@ export default function Exercices({ profile }) {
         {filtered.map(ex => {
           const color = MUSCLE_COLORS[ex.muscle_group] || '#6b7fa3'
           return (
-            <div key={ex.id} style={{
+            <div key={ex.id} className="exercice-card" style={{
               background: '#131e35', borderRadius: 14,
               padding: '16px 18px', border: '1px solid #1a2a45',
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            }}>
-              <div>
-                <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 8, color: '#f0f4ff' }}>
-                  {ex.name}
-                </p>
-                <div style={{ display: 'flex', gap: 8 }}>
+              cursor: 'pointer',
+            }} onClick={() => setSelectedEx(ex)}>
+                    {selectedEx && (
+                      <div className="fiche-exercice-modal" style={{
+                        position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+                        background: 'rgba(8,13,26,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }} onClick={() => setSelectedEx(null)}>
+                        <div style={{
+                          background: '#131e35', borderRadius: 22, boxShadow: '0 8px 32px 0 rgba(0,229,255,0.10)',
+                          border: '1.5px solid #1a2a45', padding: '38px 28px', minWidth: 320, maxWidth: 380,
+                          position: 'relative', color: '#f0f4ff',
+                        }} onClick={e => e.stopPropagation()}>
+                          <button onClick={() => setSelectedEx(null)} style={{ position: 'absolute', top: 18, right: 18, background: 'none', border: 'none', color: '#6b7fa3', fontSize: 22, cursor: 'pointer' }}>&times;</button>
+                          <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 10 }}>{selectedEx.name}</h2>
+                          <div style={{ display: 'flex', gap: 10, marginBottom: 14 }}>
+                            <span style={{
+                              padding: '5px 14px', borderRadius: 99, fontSize: 13, fontWeight: 600,
+                              background: MUSCLE_COLORS[selectedEx.muscle_group] + '22', color: MUSCLE_COLORS[selectedEx.muscle_group] || '#6b7fa3', border: `1px solid ${(MUSCLE_COLORS[selectedEx.muscle_group] || '#6b7fa3')}44`,
+                            }}>{selectedEx.muscle_group}</span>
+                            {selectedEx.sub_group && <span style={{
+                              padding: '5px 14px', borderRadius: 99, fontSize: 13, fontWeight: 600,
+                              background: '#222a38', color: '#00e5ff', border: '1px solid #00e5ff44',
+                            }}>{selectedEx.sub_group}</span>}
+                            <span style={{
+                              padding: '5px 14px', borderRadius: 99, fontSize: 13,
+                              background: '#192038', color: '#6b7fa3', border: '1px solid #1a2a45',
+                            }}>{selectedEx.equipment}</span>
+                          </div>
+                          {selectedEx.description && <p style={{ color: '#6b7fa3', fontSize: 15, margin: 0, fontStyle: 'italic', marginBottom: 10 }}>{selectedEx.description}</p>}
+                        </div>
+                      </div>
+                    )}
+              <div style={{ flex: 1 }}>
+                <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 4, color: '#f0f4ff' }}>{ex.name}</p>
+                <div style={{ display: 'flex', gap: 8, marginBottom: 4 }}>
                   <span style={{
                     padding: '3px 12px', borderRadius: 99, fontSize: 12, fontWeight: 500,
                     background: color + '22', color, border: `1px solid ${color}44`,
-                  }}>
-                    {ex.muscle_group}
-                  </span>
+                  }}>{ex.muscle_group}</span>
+                  {ex.sub_group && <span style={{
+                    padding: '3px 12px', borderRadius: 99, fontSize: 12, fontWeight: 500,
+                    background: '#222a38', color: '#00e5ff', border: '1px solid #00e5ff44',
+                  }}>{ex.sub_group}</span>}
                   <span style={{
                     padding: '3px 12px', borderRadius: 99, fontSize: 12,
                     background: '#192038', color: '#6b7fa3', border: '1px solid #1a2a45',
-                  }}>
-                    {ex.equipment}
-                  </span>
+                  }}>{ex.equipment}</span>
                 </div>
+                {ex.description && <p style={{ color: '#6b7fa3', fontSize: 13, margin: 0, fontStyle: 'italic' }}>{ex.description}</p>}
               </div>
               <ChevronRight size={18} color="#3a4a6a" />
             </div>

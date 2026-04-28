@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 const SeanceSummary = ({ summary, onPrev, onSaved, profile, onNavigate }) => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
   if (!summary || !profile) return null;
 
   // Calcul volume total
@@ -11,7 +12,7 @@ const SeanceSummary = ({ summary, onPrev, onSaved, profile, onNavigate }) => {
   const totalVolume = allSets.reduce((sum, s) => sum + (Number(s.reps) * Number(s.weight)), 0);
 
   async function saveSession() {
-    setSaving(true); setError('');
+    setSaving(true); setError(''); setSuccess(false);
     try {
       const name = `Séance du ${new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })}`;
       const { data: session, error: err1 } = await supabase.from('sessions').insert({
@@ -32,15 +33,19 @@ const SeanceSummary = ({ summary, onPrev, onSaved, profile, onNavigate }) => {
             set_index: idx + 1,
             reps: Number(s.reps),
             weight: Number(s.weight),
+            user_id: profile.id,
           });
         });
       });
       const { error: err2 } = await supabase.from('session_sets').insert(setsToInsert);
       if (err2) throw err2;
-      if (onNavigate) onNavigate('historique');
-      if (onSaved) onSaved();
+      setSuccess(true);
+      setTimeout(() => {
+        if (onNavigate) onNavigate('historique');
+        if (onSaved) onSaved();
+      }, 1200);
     } catch (e) {
-      setError('Erreur lors de la sauvegarde.');
+      setError(e?.message || JSON.stringify(e));
     }
     setSaving(false);
   }
@@ -66,6 +71,7 @@ const SeanceSummary = ({ summary, onPrev, onSaved, profile, onNavigate }) => {
         </ul>
       </div>
       {error && <p style={{ color: '#ff3d9a', marginBottom: 10 }}>{error}</p>}
+      {success && <p style={{ color: '#00e5ff', marginBottom: 10, fontWeight: 700 }}>Séance sauvegardée !</p>}
       <div style={{ display: 'flex', gap: 10, marginTop: 24 }}>
         <button onClick={onPrev} className="btn-secondary" style={{ flex: 1, padding: '14px 0', borderRadius: 14, background: '#1a2a45', color: '#fff', fontWeight: 700, fontSize: 15 }}>Retour</button>
         <button onClick={saveSession} className="btn-primary" disabled={saving} style={{ flex: 2, padding: '14px 0', borderRadius: 14, background: 'linear-gradient(135deg, #006064, #00acc1)', color: '#fff', fontWeight: 700, fontSize: 15, opacity: saving ? 0.6 : 1 }}>{saving ? 'Sauvegarde…' : 'Sauvegarder'}</button>
