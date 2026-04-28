@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react'
-import { CalendarDays, Dumbbell, Clock, Trash2 } from 'lucide-react'
+import { CalendarDays, Dumbbell, Clock, Trash2, ChevronRight } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import PageHeader from '../components/PageHeader'
+import SeanceDetail from './SeanceDetail'
 
 export default function Historique({ profile }) {
   const [sessions, setSessions] = useState([])
   const [loading, setLoading] = useState(true)
+  const [selectedSessionId, setSelectedSessionId] = useState(null)
 
   useEffect(() => { if (profile) fetchSessions() }, [profile])
 
   async function fetchSessions() {
+    setLoading(true)
     const { data } = await supabase
       .from('sessions')
       .select('*, session_sets(count)')
@@ -19,14 +22,27 @@ export default function Historique({ profile }) {
     setLoading(false)
   }
 
-  async function deleteSession(id) {
+  async function deleteSession(e, id) {
+    e.stopPropagation()
+    if (!confirm('Supprimer cette séance ?')) return
+    await supabase.from('session_sets').delete().eq('session_id', id)
     await supabase.from('sessions').delete().eq('id', id)
     fetchSessions()
   }
 
+  if (selectedSessionId) {
+    return (
+      <SeanceDetail
+        sessionId={selectedSessionId}
+        onBack={() => { setSelectedSessionId(null); fetchSessions() }}
+      />
+    )
+  }
+
   const grouped = {}
   sessions.forEach(s => {
-    const key = new Date(s.started_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }).toUpperCase()
+    const key = new Date(s.started_at)
+      .toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }).toUpperCase()
     if (!grouped[key]) grouped[key] = []
     grouped[key].push(s)
   })
@@ -57,19 +73,25 @@ export default function Historique({ profile }) {
               {list.map(s => {
                 const day = new Date(s.started_at).getDate().toString().padStart(2, '0')
                 const sets = s.session_sets?.[0]?.count || 0
-                const vol = s.total_volume_kg ? `${(s.total_volume_kg / 1000).toFixed(1)}t` : '—'
+                const vol = s.total_volume_kg
+                  ? s.total_volume_kg >= 1000
+                    ? `${(s.total_volume_kg / 1000).toFixed(1)}t`
+                    : `${Math.round(s.total_volume_kg)} kg`
+                  : '—'
                 return (
-                  <div key={s.id} className="historique-card">
+                  <div key={s.id} className="historique-card historique-card-clickable"
+                    onClick={() => setSelectedSessionId(s.id)}>
                     <div className="historique-day">{day}</div>
                     <div className="historique-info">
                       <p className="historique-title">{s.name}</p>
                       <div className="historique-details">
-                        <span><Dumbbell size={12} /> {sets} exercices</span>
+                        <span><Dumbbell size={12} /> {sets} série{sets > 1 ? 's' : ''}</span>
                         <span><Clock size={12} /> {formatDuration(s.started_at, s.ended_at)}</span>
                       </div>
                     </div>
                     <span className="historique-volume">{vol}</span>
-                    <button onClick={() => deleteSession(s.id)} className="historique-delete">
+                    <ChevronRight size={16} color="#3a4a6a" style={{ marginRight: 2 }} />
+                    <button onClick={(e) => deleteSession(e, s.id)} className="historique-delete">
                       <Trash2 size={14} color="#ff3d9a" />
                     </button>
                   </div>

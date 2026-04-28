@@ -12,14 +12,14 @@ export default function PageHeader({ icon: Icon, title, iconColor = '#00e5ff', a
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
         <div style={{
           width: 46, height: 46, borderRadius: 14,
-          background: '#131e35',
+          background: '#515c75',
           border: '1.5px solid #1a2a45',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: '0 2px 8px 0 rgba(0,229,255,0.08)'
         }}>
           <Icon size={22} color={iconColor} strokeWidth={2.1} />
         </div>
-        <h1 style={{ fontSize: 24, fontWeight: 800, color: '#f0f4ff', letterSpacing: 0.2 }}>
+        <h1 style={{ fontSize: 24, fontWeight: 750, color: '#f0f4ff', letterSpacing: 0.2 }}>
           {title}
         </h1>
       </div>
@@ -27,4 +27,6 @@ export default function PageHeader({ icon: Icon, title, iconColor = '#00e5ff', a
     </div>
   )
 }
+
+
 
