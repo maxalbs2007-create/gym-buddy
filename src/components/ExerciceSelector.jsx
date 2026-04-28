@@ -44,10 +44,39 @@ const ExerciceSelector = ({ selectedExercises, setSelectedExercises, onNext }) =
       background: '#080d1a',
       display: 'flex', flexDirection: 'column',
       maxWidth: 480, margin: '0 auto',
+      zIndex: 999,
     }}>
-      {/* Header fixe */}
-      <div style={{ padding: '20px 20px 0', flexShrink: 0 }}>
-        <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 14, color: '#f0f4ff' }}>
+
+      {/* BOUTON EN TOUT PREMIER */}
+      <div style={{
+        padding: '16px 20px 12px',
+        background: '#080d1a',
+        borderBottom: '1px solid #1a2a45',
+        flexShrink: 0,
+      }}>
+        {selectedExercises.length > 0 && (
+          <p style={{ color: '#00e5ff', fontSize: 13, fontWeight: 600, marginBottom: 8, textAlign: 'center' }}>
+            {selectedExercises.length} exercice{selectedExercises.length > 1 ? 's' : ''} sélectionné{selectedExercises.length > 1 ? 's' : ''}
+          </p>
+        )}
+        <button
+          onClick={onNext}
+          disabled={selectedExercises.length === 0}
+          style={{
+            width: '100%', padding: '14px 0', borderRadius: 16,
+            background: selectedExercises.length ? 'linear-gradient(135deg, #006064, #00acc1)' : '#1a2a45',
+            color: '#fff', fontSize: 16, fontWeight: 700, border: 'none',
+            cursor: selectedExercises.length ? 'pointer' : 'not-allowed',
+            opacity: selectedExercises.length ? 1 : 0.5,
+          }}
+        >
+          Valider ({selectedExercises.length})
+        </button>
+      </div>
+
+      {/* TITRE + RECHERCHE + FILTRES */}
+      <div style={{ padding: '16px 20px 0', flexShrink: 0 }}>
+        <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 12, color: '#f0f4ff' }}>
           Choisis tes exercices
         </h2>
         <input
@@ -61,7 +90,7 @@ const ExerciceSelector = ({ selectedExercises, setSelectedExercises, onNext }) =
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
-        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 8, marginBottom: 4 }}>
+        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 8 }}>
           {MUSCLES.map(m => (
             <button key={m} onClick={() => setFilter(m)} style={{
               padding: '7px 14px', borderRadius: 99, whiteSpace: 'nowrap',
@@ -73,34 +102,12 @@ const ExerciceSelector = ({ selectedExercises, setSelectedExercises, onNext }) =
             }}>{m}</button>
           ))}
         </div>
-
-        {/* ✅ BOUTON ICI EN HAUT */}
-        <div style={{ paddingBottom: 12, borderBottom: '1px solid #1a2a45', marginBottom: 8 }}>
-          {selectedExercises.length > 0 && (
-            <p style={{ color: '#00e5ff', fontSize: 13, fontWeight: 600, marginBottom: 8, textAlign: 'center' }}>
-              {selectedExercises.length} exercice{selectedExercises.length > 1 ? 's' : ''} sélectionné{selectedExercises.length > 1 ? 's' : ''}
-            </p>
-          )}
-          <button
-            onClick={onNext}
-            disabled={selectedExercises.length === 0}
-            style={{
-              width: '100%', padding: '14px 0', borderRadius: 16,
-              background: selectedExercises.length ? 'linear-gradient(135deg, #006064, #00acc1)' : '#1a2a45',
-              color: '#fff', fontSize: 16, fontWeight: 700, border: 'none',
-              cursor: selectedExercises.length ? 'pointer' : 'not-allowed',
-              opacity: selectedExercises.length ? 1 : 0.5,
-            }}
-          >
-            Valider ({selectedExercises.length})
-          </button>
-        </div>
       </div>
 
-      {/* Liste scrollable */}
+      {/* LISTE SCROLLABLE */}
       <div style={{
         flex: 1, overflowY: 'auto',
-        padding: '10px 20px 0',
+        padding: '10px 20px 20px',
         display: 'flex', flexDirection: 'column', gap: 8,
       }}>
         {loading ? (
@@ -146,35 +153,6 @@ const ExerciceSelector = ({ selectedExercises, setSelectedExercises, onNext }) =
             </div>
           );
         })}
-        <div style={{ height: 16 }} />
-      </div>
-    </div>
-  );
-      {/* Bouton fixe en bas */}
-      <div style={{
-        padding: '12px 20px 20px',
-        borderTop: '1px solid #1a2a45',
-        background: '#080d1a',
-        flexShrink: 0,
-      }}>
-        {selectedExercises.length > 0 && (
-          <p style={{ color: '#00e5ff', fontSize: 13, fontWeight: 600, marginBottom: 8, textAlign: 'center' }}>
-            {selectedExercises.length} exercice{selectedExercises.length > 1 ? 's' : ''} sélectionné{selectedExercises.length > 1 ? 's' : ''}
-          </p>
-        )}
-        <button
-          onClick={onNext}
-          disabled={selectedExercises.length === 0}
-          style={{
-            width: '100%', padding: '16px 0', borderRadius: 16,
-            background: selectedExercises.length ? 'linear-gradient(135deg, #006064, #00acc1)' : '#1a2a45',
-            color: '#fff', fontSize: 16, fontWeight: 700, border: 'none',
-            cursor: selectedExercises.length ? 'pointer' : 'not-allowed',
-            opacity: selectedExercises.length ? 1 : 0.5,
-          }}
-        >
-          Valider ({selectedExercises.length})
-        </button>
       </div>
     </div>
   );
