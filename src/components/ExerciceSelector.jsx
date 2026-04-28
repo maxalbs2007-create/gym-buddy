@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { Check } from 'lucide-react';
 
 const MUSCLES = ['Tous', 'Pectoraux', 'Dos', 'Épaules', 'Biceps', 'Triceps', 'Jambes', 'Abdos', 'Cardio'];
 const MUSCLE_COLORS = {
@@ -38,69 +39,120 @@ const ExerciceSelector = ({ selectedExercises, setSelectedExercises, onNext }) =
   }
 
   return (
-    <div className="exercice-selector" style={{ padding: 20 }}>
-      <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 18 }}>Choisis tes exercices</h2>
-      <div style={{ position: 'relative', marginBottom: 16 }}>
+    <div style={{
+      position: 'fixed', inset: 0,
+      background: '#080d1a',
+      display: 'flex', flexDirection: 'column',
+      maxWidth: 480, margin: '0 auto',
+    }}>
+      {/* Header fixe */}
+      <div style={{ padding: '20px 20px 0', flexShrink: 0 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 14, color: '#f0f4ff' }}>
+          Choisis tes exercices
+        </h2>
         <input
-          style={{ width: '100%', padding: '13px 16px', background: '#192038', border: '1px solid #1a2a45', borderRadius: 14, color: '#f0f4ff', fontSize: 14, paddingLeft: 16 }}
+          style={{
+            width: '100%', padding: '13px 16px',
+            background: '#192038', border: '1px solid #1a2a45',
+            borderRadius: 14, color: '#f0f4ff', fontSize: 14,
+            marginBottom: 12, boxSizing: 'border-box',
+          }}
           placeholder="Rechercher un exercice..."
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
+        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 8, marginBottom: 4 }}>
+          {MUSCLES.map(m => (
+            <button key={m} onClick={() => setFilter(m)} style={{
+              padding: '7px 14px', borderRadius: 99, whiteSpace: 'nowrap',
+              background: filter === m ? '#00e5ff' : '#131e35',
+              color: filter === m ? '#000' : '#6b7fa3',
+              border: filter === m ? 'none' : '1px solid #1a2a45',
+              fontSize: 13, fontWeight: filter === m ? 600 : 400, cursor: 'pointer',
+              flexShrink: 0,
+            }}>{m}</button>
+          ))}
+        </div>
       </div>
-      <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4, marginBottom: 20 }}>
-        {MUSCLES.map(m => (
-          <button key={m} onClick={() => setFilter(m)} style={{
-            padding: '8px 16px', borderRadius: 99, whiteSpace: 'nowrap',
-            background: filter === m ? '#00e5ff' : '#131e35',
-            color: filter === m ? '#000' : '#6b7fa3',
-            border: filter === m ? 'none' : '1px solid #1a2a45',
-            fontSize: 13, fontWeight: filter === m ? 600 : 400, cursor: 'pointer',
-          }}>{m}</button>
-        ))}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, minHeight: 120 }}>
+
+      {/* Liste scrollable */}
+      <div style={{
+        flex: 1, overflowY: 'auto',
+        padding: '10px 20px 0',
+        display: 'flex', flexDirection: 'column', gap: 8,
+      }}>
         {loading ? (
-          <p style={{ color: '#6b7fa3', textAlign: 'center' }}>Chargement…</p>
+          <p style={{ color: '#6b7fa3', textAlign: 'center', marginTop: 40 }}>Chargement…</p>
         ) : filtered.length === 0 ? (
-          <p style={{ color: '#3a4a6a', textAlign: 'center' }}>Aucun exercice trouvé</p>
+          <p style={{ color: '#3a4a6a', textAlign: 'center', marginTop: 40 }}>Aucun exercice trouvé</p>
         ) : filtered.map(ex => {
           const color = MUSCLE_COLORS[ex.muscle_group] || '#6b7fa3';
           const checked = selectedExercises.some(e => e.id === ex.id);
           return (
-            <div key={ex.id} style={{
-              background: checked ? '#00e5ff22' : '#131e35', borderRadius: 14,
-              padding: '14px 16px', border: checked ? '2px solid #00e5ff' : '1px solid #1a2a45',
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer',
-            }} onClick={() => toggleExercise(ex)}>
+            <div key={ex.id} onClick={() => toggleExercise(ex)} style={{
+              background: checked ? '#00e5ff14' : '#131e35',
+              borderRadius: 14, padding: '12px 14px',
+              border: checked ? '1.5px solid #00e5ff55' : '1px solid #1a2a45',
+              display: 'flex', alignItems: 'center',
+              justifyContent: 'space-between', cursor: 'pointer',
+            }}>
               <div>
-                <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 8, color: checked ? '#00e5ff' : '#f0f4ff' }}>{ex.name}</p>
-                <div style={{ display: 'flex', gap: 8 }}>
+                <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 6, color: checked ? '#00e5ff' : '#f0f4ff' }}>
+                  {ex.name}
+                </p>
+                <div style={{ display: 'flex', gap: 6 }}>
                   <span style={{
-                    padding: '3px 12px', borderRadius: 99, fontSize: 12, fontWeight: 500,
+                    padding: '2px 10px', borderRadius: 99, fontSize: 12, fontWeight: 500,
                     background: color + '22', color, border: `1px solid ${color}44`,
                   }}>{ex.muscle_group}</span>
-                  <span style={{
-                    padding: '3px 12px', borderRadius: 99, fontSize: 12,
-                    background: '#192038', color: '#6b7fa3', border: '1px solid #1a2a45',
-                  }}>{ex.equipment}</span>
+                  {ex.equipment && (
+                    <span style={{
+                      padding: '2px 10px', borderRadius: 99, fontSize: 12,
+                      background: '#192038', color: '#6b7fa3', border: '1px solid #1a2a45',
+                    }}>{ex.equipment}</span>
+                  )}
                 </div>
               </div>
-              <input type="checkbox" checked={checked} readOnly style={{ width: 20, height: 20 }} />
+              <div style={{
+                width: 22, height: 22, borderRadius: 6, flexShrink: 0,
+                background: checked ? '#00e5ff' : '#192038',
+                border: checked ? 'none' : '1.5px solid #1a2a45',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                {checked && <Check size={13} color="#000" strokeWidth={3} />}
+              </div>
             </div>
           );
         })}
+        <div style={{ height: 16 }} />
       </div>
-      <button
-        onClick={onNext}
-        className="btn-primary"
-        disabled={selectedExercises.length === 0}
-        style={{
-          marginTop: 28, width: '100%', padding: '16px 0', borderRadius: 16,
-          background: selectedExercises.length ? 'linear-gradient(135deg, #006064, #00acc1)' : '#1a2a45',
-          color: '#fff', fontSize: 16, fontWeight: 700, border: 'none', opacity: selectedExercises.length ? 1 : 0.6,
-        }}
-      >Valider</button>
+
+      {/* Bouton fixe en bas */}
+      <div style={{
+        padding: '12px 20px 20px',
+        borderTop: '1px solid #1a2a45',
+        background: '#080d1a',
+        flexShrink: 0,
+      }}>
+        {selectedExercises.length > 0 && (
+          <p style={{ color: '#00e5ff', fontSize: 13, fontWeight: 600, marginBottom: 8, textAlign: 'center' }}>
+            {selectedExercises.length} exercice{selectedExercises.length > 1 ? 's' : ''} sélectionné{selectedExercises.length > 1 ? 's' : ''}
+          </p>
+        )}
+        <button
+          onClick={onNext}
+          disabled={selectedExercises.length === 0}
+          style={{
+            width: '100%', padding: '16px 0', borderRadius: 16,
+            background: selectedExercises.length ? 'linear-gradient(135deg, #006064, #00acc1)' : '#1a2a45',
+            color: '#fff', fontSize: 16, fontWeight: 700, border: 'none',
+            cursor: selectedExercises.length ? 'pointer' : 'not-allowed',
+            opacity: selectedExercises.length ? 1 : 0.5,
+          }}
+        >
+          Valider ({selectedExercises.length})
+        </button>
+      </div>
     </div>
   );
 };
