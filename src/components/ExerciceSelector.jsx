@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { Check } from 'lucide-react';
+import { Check, Settings, X, HeadphonesIcon, LogOut } from 'lucide-react';
 
 const MUSCLES = ['Tous', 'Pectoraux', 'Dos', 'Épaules', 'Biceps', 'Triceps', 'Jambes', 'Abdos', 'Cardio'];
 const MUSCLE_COLORS = {
@@ -40,14 +40,13 @@ const ExerciceSelector = ({ selectedExercises, setSelectedExercises, onNext }) =
 
   return (
     <div style={{
-      position: 'fixed', inset: 0,
+      position: 'fixed', top: 0, left: 0, right: 0, bottom: 70,
       background: '#080d1a',
       display: 'flex', flexDirection: 'column',
       maxWidth: 480, margin: '0 auto',
       zIndex: 999,
     }}>
-
-      {/* BOUTON EN TOUT PREMIER */}
+      {/* BOUTON VALIDER EN HAUT */}
       <div style={{
         padding: '16px 20px 12px',
         background: '#080d1a',
